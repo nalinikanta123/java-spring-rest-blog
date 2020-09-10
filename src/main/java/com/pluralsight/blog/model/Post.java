@@ -5,18 +5,20 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
 
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Version
+    private Long version;
     @NotNull
-    @Size(min = 4, max = 100)
+    @Size(min=4, max=100)
     private String title;
     @Column(length=1000000)
     @Lob
@@ -24,20 +26,10 @@ public class Post {
     @Temporal(TemporalType.DATE)
     @CreationTimestamp
     private Date date;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.EAGER)
     private Author author;
-    @Version 
-    private Long version;
-    
-    public Author getAuthor() {
-		return author;
-	}
 
-	public void setAuthor(Author author) {
-		this.author = author;
-	}
-
-	public Post() {
+    public Post() {
         super();
     }
 
@@ -91,5 +83,13 @@ public class Post {
         Post otherPost = (Post)obj;
         return this.title.equals(otherPost.getTitle()) &&
                this.body.equals(otherPost.getBody());
+    }
+
+    public Author getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(Author author) {
+        this.author = author;
     }
 }
